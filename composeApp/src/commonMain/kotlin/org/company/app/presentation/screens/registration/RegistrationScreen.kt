@@ -1,6 +1,9 @@
 package org.company.app.presentation.screens.registration
 
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +19,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,20 +38,31 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Eye
 import compose.icons.feathericons.EyeOff
+import org.company.app.presentation.theme.LocalThemeIsDark
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.koinInject
 import timetracker_pro.composeapp.generated.resources.IndieFlower_Regular
 import timetracker_pro.composeapp.generated.resources.Res
 import timetracker_pro.composeapp.generated.resources.app_title
+import timetracker_pro.composeapp.generated.resources.button_do_registration
+import timetracker_pro.composeapp.generated.resources.button_login
 import timetracker_pro.composeapp.generated.resources.button_registration
+import timetracker_pro.composeapp.generated.resources.email
+import timetracker_pro.composeapp.generated.resources.ic_dark_mode
+import timetracker_pro.composeapp.generated.resources.ic_light_mode
+import timetracker_pro.composeapp.generated.resources.name
+import timetracker_pro.composeapp.generated.resources.password
 
 @Composable
 fun Registration(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLoginClick: () -> Unit,
 ) {
     val viewModel: RegistrationViewModel = koinInject()
     val uiState by viewModel.state.collectAsState()
@@ -60,6 +75,31 @@ fun Registration(
             .windowInsetsPadding(WindowInsets.safeDrawing)
             .padding(32.dp)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                stringResource(Res.string.button_registration),
+                fontSize = 15.sp,
+                style = MaterialTheme.typography.displaySmall,
+            )
+
+            var isDark by LocalThemeIsDark.current
+            val icon = remember(isDark) {
+                if (isDark) Res.drawable.ic_light_mode
+                else Res.drawable.ic_dark_mode
+            }
+
+            ElevatedButton(
+                onClick = { isDark = !isDark },
+                content = {
+                    Icon(vectorResource(icon), contentDescription = null)
+                    //Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                }
+            )
+        }
+
         Text(
             text = stringResource(Res.string.app_title),
             fontFamily = FontFamily(Font(Res.font.IndieFlower_Regular)),
@@ -76,8 +116,9 @@ fun Registration(
             onValueChange = {
                 viewModel.onEvent(RegistrationEvent.OnNameChanged(it))
             },
-            label = { Text("Имя") },
+            label = { Text(stringResource(Res.string.name)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+            singleLine = true,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Person,
@@ -85,6 +126,7 @@ fun Registration(
                 )
             },
             modifier = Modifier.fillMaxWidth()
+                .focusable()
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -94,8 +136,9 @@ fun Registration(
             onValueChange = {
                 viewModel.onEvent(RegistrationEvent.OnEmailChanged(it))
             },
-            label = { Text("Email") },
+            label = { Text(stringResource(Res.string.email)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Email,
@@ -112,10 +155,10 @@ fun Registration(
             onValueChange = {
                 viewModel.onEvent(RegistrationEvent.OnPasswordChanged(it))
             },
-            label = { Text("Пароль") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None
-            else PasswordVisualTransformation(),
+            label = { Text(stringResource(Res.string.password)) },
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Filled.Lock,
@@ -144,10 +187,21 @@ fun Registration(
             enabled = isButtonEnable(uiState),
             shape = MaterialTheme.shapes.small,
             modifier = Modifier.fillMaxWidth()
-                .height(48.dp)
         ) {
             Text(
-                text = stringResource(Res.string.button_registration)
+                text = stringResource(Res.string.button_do_registration)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = onLoginClick,
+            shape = MaterialTheme.shapes.small,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(Res.string.button_login)
             )
         }
     }
@@ -159,4 +213,5 @@ fun Registration(
 fun isButtonEnable(uiState: RegistrationState): Boolean {
     return uiState.emailText.isNotEmpty() && uiState.emailText.isNotBlank()
             && uiState.passwordText.isNotEmpty() && uiState.passwordText.isNotBlank()
+            && uiState.nameText.isNotEmpty() && uiState.nameText.isNotBlank()
 }

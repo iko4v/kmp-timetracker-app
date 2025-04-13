@@ -27,9 +27,9 @@ fun NavGraphBuilder.mainFeatureNavGraph(
 
         composable(route = Screens.Registration.route) {
             Registration(
-               /* onClick = {
-                    navHostController.navigate(MainScreens.Login.route)
-                }*/
+                onLoginClick = {
+                    navHostController.navigate(Screens.Login.route)
+                }
             )
         }
     }

@@ -89,7 +89,11 @@ class RegistrationViewModel : ViewModel(), KoinComponent {
     }
 
     private fun doNameChanged(event: RegistrationEvent.OnNameChanged) {
-
+        _state.update {
+            it.copy(
+                nameText = event.value,
+            )
+        }
     }
 
 
