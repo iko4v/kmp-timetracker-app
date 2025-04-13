@@ -115,8 +115,7 @@ internal fun AppTheme(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-            )
-
+            ),
         ) {
             Surface(content = content)
         }
