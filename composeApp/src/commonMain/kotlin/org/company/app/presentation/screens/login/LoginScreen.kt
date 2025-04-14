@@ -15,7 +15,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,13 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import compose.icons.FeatherIcons
 import compose.icons.feathericons.Eye
 import compose.icons.feathericons.EyeOff
@@ -60,80 +57,92 @@ fun Login(
        modifier = Modifier
            .fillMaxSize()
            .windowInsetsPadding(WindowInsets.safeDrawing)
-           .padding(32.dp)
+           .padding(16.dp)
    ) {
        Text(
            text = stringResource(Res.string.app_title),
            fontFamily = FontFamily(Font(Res.font.IndieFlower_Regular)),
            style = MaterialTheme.typography.displaySmall,
            modifier = Modifier
-               .padding(top = 80.dp, bottom = 30.dp)
+               .padding(vertical = 80.dp)
                .fillMaxWidth()
                .wrapContentSize(Alignment.Center)
 
        )
-
-       OutlinedTextField(
-           value = email,
-           onValueChange = { email = it },
-           label = { Text("Email") },
-           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-           leadingIcon = {
-               Icon(
-                   imageVector = Icons.Filled.Email,
-                   contentDescription = "Email icon"
-               )
-           },
-           modifier = Modifier.fillMaxWidth()
-       )
-
-       Spacer(modifier = Modifier.height(10.dp))
-
-       OutlinedTextField(
-           value = password,
-           onValueChange = { password = it },
-           label = { Text("Пароль") },
-           visualTransformation = if (passwordVisible) VisualTransformation.None
-           else PasswordVisualTransformation(),
-           keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-           leadingIcon = {
-               Icon(
-                   imageVector = Icons.Filled.Lock,
-                   contentDescription = "Password icon"
-               )
-           },
-           trailingIcon = {
-               IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                   Icon(
-                       imageVector = if (passwordVisible) FeatherIcons.Eye
-                       else FeatherIcons.EyeOff,
-                       contentDescription = "Toggle password visibility"
-                   )
-               }
-           },
-
-           modifier = Modifier.fillMaxWidth()
-       )
-
-       Spacer(modifier = Modifier.height(24.dp))
-
-       Button(
-           onClick = onLoginClick,
-           shape = MaterialTheme.shapes.small,
-           modifier = Modifier.fillMaxWidth()
-               .height(48.dp)
-       ) {
-           Text("Войти")
-       }
-
-       Spacer(modifier = Modifier.height(12.dp))
-
-       OutlinedButton(
-           onClick = onRegisterClick,
-           shape = MaterialTheme.shapes.small,
-           modifier = Modifier.fillMaxWidth()
-       ) {
-           Text("Регистрация")
-       }
    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Email,
+                        contentDescription = "Email icon"
+                    )
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Пароль") },
+                visualTransformation = if (passwordVisible) VisualTransformation.None
+                else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "Password icon"
+                    )
+                },
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible) FeatherIcons.Eye
+                            else FeatherIcons.EyeOff,
+                            contentDescription = "Toggle password visibility"
+                        )
+                    }
+                },
+
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = onLoginClick,
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+                    .height(48.dp)
+            ) {
+                Text("Войти")
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            OutlinedButton(
+                onClick = onRegisterClick,
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Регистрация")
+            }
+        }
+    }
 }
