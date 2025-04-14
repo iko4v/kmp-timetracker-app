@@ -1,39 +1,40 @@
-package org.company.app.presentation.screens.registration
+package org.company.app.presentation.screens.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import org.koin.core.component.KoinComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import org.company.app.domain.model.AppUser
-import org.koin.core.component.KoinComponent
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.company.app.domain.model.AppUser
+import org.company.app.presentation.screens.registration.RegistrationEvent
 
-class RegistrationViewModel : ViewModel(), KoinComponent {
-    private val _state = MutableStateFlow(RegistrationState())
+
+class LoginViewModel : ViewModel(), KoinComponent {
+    private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
             initialValue = _state.value
-            // RegistrationState()
+            // LoginState()
         )
 
-    fun onEvent(event: RegistrationEvent) {
+    fun onEvent(event: LoginEvent) {
         when (event) {
-            is RegistrationEvent.OnRegistration -> doRegistration(event)
-            is RegistrationEvent.OnEmailChanged -> doEmailChanged(event)
-            is RegistrationEvent.OnPasswordChanged -> doPasswordChanged(event)
-            is RegistrationEvent.OnNameChanged -> doNameChanged(event)
-            is RegistrationEvent.OnSetDefaultState -> setDefaultState()
+            is LoginEvent.OnLogin -> doLogin(event)
+            is LoginEvent.OnEmailChanged -> doEmailChanged(event)
+            is LoginEvent.OnPasswordChanged -> doPasswordChanged(event)
+            is LoginEvent.OnSetDefaultState -> setDefaultState()
         }
     }
 
-    private fun doRegistration(event: RegistrationEvent.OnRegistration) {
+    private fun doLogin(event: LoginEvent.OnLogin) {
         when {
             _state.value.emailText.isBlank() || _state.value.emailText.isEmpty() -> {
                 _state.update {
@@ -52,25 +53,26 @@ class RegistrationViewModel : ViewModel(), KoinComponent {
             }
 
             else -> {
-                // TODO: В этом месте регистрирем пользователя.
+                // TODO: В этом месте логинимся.
 
-                // Объект для регистрации
+                // Объект для логина
                 val user = AppUser(
                     email = _state.value.emailText,
                     password = _state.value.passwordText,
-                    name = _state.value.nameText,
-                    registrationDate = Clock.System.now()
+                    registrationDate = "",
+                    name = "",
+                    lastLoginDate = Clock.System.now()
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                         .toString()
                 )
 
                 println("user: $user")
-                // TODO: Добавить сохранение пользователя.
+                // TODO: Добавить логику логина.
             }
         }
     }
 
-    private fun doEmailChanged(event: RegistrationEvent.OnEmailChanged) {
+    private fun doEmailChanged(event: LoginEvent.OnEmailChanged){
         _state.update {
             it.copy(
                 emailText = event.value,
@@ -79,7 +81,7 @@ class RegistrationViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    private fun doPasswordChanged(event: RegistrationEvent.OnPasswordChanged) {
+    private fun doPasswordChanged(event: LoginEvent.OnPasswordChanged) {
         _state.update {
             it.copy(
                 passwordText = event.value,
@@ -88,22 +90,12 @@ class RegistrationViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    private fun doNameChanged(event: RegistrationEvent.OnNameChanged) {
-        _state.update {
-            it.copy(
-                nameText = event.value,
-            )
-        }
-    }
-
-
     private fun setDefaultState() {
         _state.update {
             it.copy(
-                isRegistrationSuccess = false,
+                isLoginSuccess = false,
                 emailText = "",
                 passwordText = "",
-                nameText = "",
                 emailError = null,
                 passwordError = null,
                 isLoading = false,
