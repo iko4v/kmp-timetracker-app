@@ -106,7 +106,7 @@ fun Registration(
         }
         // Default
         else -> {
-            RegistrationScreenContent(uiState, viewModel)
+            RegistrationScreenContent(uiState, viewModel, onLoginClick)
         }
     }
 
@@ -116,7 +116,8 @@ fun Registration(
 @Composable
 private fun RegistrationScreenContent(
     uiState: RegistrationState,
-    viewModel: RegistrationViewModel
+    viewModel: RegistrationViewModel,
+    onLoginClick: () -> Unit,
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -124,7 +125,7 @@ private fun RegistrationScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
-            .padding(32.dp)
+            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

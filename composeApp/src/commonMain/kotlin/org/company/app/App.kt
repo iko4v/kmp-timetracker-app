@@ -14,15 +14,13 @@ import org.koin.compose.KoinContext
 internal fun App() = AppTheme {
 
     KoinContext {
-        Surface {
-            val navController: NavHostController = rememberNavController()
+        val navController: NavHostController = rememberNavController()
 
-            NavHost(
-                navController = navController,
-                startDestination = Screens.Root.route // Корневой граф.
-            ) {
-                mainFeatureNavGraph(navHostController = navController) // Вложенный граф.
-            }
+        NavHost(
+            navController = navController,
+            startDestination = Screens.Root.route // Корневой граф.
+        ) {
+            mainFeatureNavGraph(navHostController = navController) // Вложенный граф.
         }
     }
 
