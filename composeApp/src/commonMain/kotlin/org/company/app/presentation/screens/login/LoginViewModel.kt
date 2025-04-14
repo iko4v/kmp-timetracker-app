@@ -28,6 +28,7 @@ class LoginViewModel : ViewModel(), KoinComponent {
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.OnLogin -> doLogin(event)
+            is LoginEvent.OnRegister -> doRegister(event)
             is LoginEvent.OnEmailChanged -> doEmailChanged(event)
             is LoginEvent.OnPasswordChanged -> doPasswordChanged(event)
             is LoginEvent.OnSetDefaultState -> setDefaultState()
@@ -59,9 +60,8 @@ class LoginViewModel : ViewModel(), KoinComponent {
                 val user = AppUser(
                     email = _state.value.emailText,
                     password = _state.value.passwordText,
-                    registrationDate = "",
                     name = "",
-                    lastLoginDate = Clock.System.now()
+                    registrationDate = Clock.System.now()
                         .toLocalDateTime(TimeZone.currentSystemDefault())
                         .toString()
                 )
@@ -70,6 +70,10 @@ class LoginViewModel : ViewModel(), KoinComponent {
                 // TODO: Добавить логику логина.
             }
         }
+    }
+
+    private fun doRegister(even: LoginEvent.OnRegister) {
+        println("doRegister")
     }
 
     private fun doEmailChanged(event: LoginEvent.OnEmailChanged){

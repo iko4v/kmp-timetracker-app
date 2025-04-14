@@ -5,5 +5,5 @@ data class AppUser(
     val password: String,
     val name: String,
     val registrationDate: String,
-    val lastLoginDate: String? = "",
+//    val lastLoginDate: String? = "",
 )
